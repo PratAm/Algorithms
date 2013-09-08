@@ -1,0 +1,58 @@
+n-lecture question 1
+
+What if I take an arbitrary graph with say 10 SCC's, and I add one more edge to it. How might this affect the number of SCC's? Might the number increase as a result of adding the edge? Might it decrease? Could it stay the same?
+
+In-lecture answer 1
+
+Adding an edge can decrease the number of SCC's, or possibly leave it unchanged, but it cannot increase the number of SCC's. To increase the number of SCC's, we would need to break apart an existing SCC into 2 different ones. This would involve reducing reachability and could only be done by removing edges. If we add an edge between two vertices that were already mutually reachable, the number of SCC's does not change. But we might add an edge between 2 different SCC's, and by doing so merge them into one, thus reducing the number of SCC's.
+
+
+In-lecture question 3
+
+Okay so adding an edge might reduce the number of SCC's. Can it only reduce the number by one? Or might it reduce the number by more than that? Create and write down an example graph with say 5 SCC's, such that adding one edge to the graph reduces the number of SCC's to 1.
+
+In-lecture answer 3
+
+You can do this with a graph of just 5 vertices, say ABCD and E. If you have edges leading from each vertex to the next thus:
+
+A -> B -> C -> D -> E
+
+then there are 5 SCC's in this graph. (Each vertex stands alone as an SCC since there is no pair of vertices that are mutually reachable). But adding an edge from E all the way back to A collapses all 5 vertices into a single SCC since that creates a cycle, and they are all now mutually reachable. So, adding an edge can have a big effect on the SCC structure of a graph.
+
+
+In-lecture question 4
+
+With this model in mind, how many SCC's does the graph representing the entire road system of the lower 48 states of the US have?
+
+In-lecture answer 4
+
+The simple answer is: just one. We certainly expect to be able to drive from any intersection in the lower 48 to any other and back again. Indeed the alternate possibility is a little amusing to consider. Imagine for instance a road system where there was a way to travel into California but no way to travel back out. California would be one SCC and the rest of the nation another. This would be a recipe for concentrating cars in California (which might help explain LA traffic)
+
+	Component Graph
+
+	Now that we've played around a bit with the problem, let's take the next creative step and look more closely at the relationship between SCC's, trying to derive a reasonable abstraction for how SCC's connect to one another.
+
+	In our example graph, there are cases where one SCC can reach another. CDE can reach AJBK, for example. So, we may view SCC's in the aggregate as having connections between one another.
+
+	Let's see if we can help think about this via an abstraction. Let's create a graph where each vertex in the graph represents an entire SCC, as shown here in our diagram. This is termed a component graph. In this graph we'll add a directed edge for each case where one SCC can reach another. Note the directed edge for example between CDE and ABJK. If there are several ways for one SCC to reach another (as there is for CDE to ABJK) we'll still abstract that with a single directed edge. It is the fact of reachability that is of interest, not how many different connections there are.
+
+	In-lecture question 5
+
+	Now that we have the SCC relationships abstracted somewhat, is there anything we can say about the component graph and thus about the relationship between SCC's? The component graph has one important property. What is it?
+
+	In-lecture answer 5
+
+	The component graph must be a DAG. Why is that? The example component graph we have certainly is a dag, but might some other component graph include a cycle?
+
+	In-lecture question 6
+
+	Let's see what happens if the component graph has a cycle. What if we add an edge from PQO to ABJK in our component graph, and make the necessary changes to the original graph to justify that addition, say adding an edge from Q to A. Then we'd have a cycle in the component graph. Wouldn't that be possible? My tone suggests the answer is "no", but why?
+
+	In-lecture answer 6
+
+	Because adding that edge would make the two SCC's mutually reachable. Indeed that's exactly the example we used earlier to show that the addition of an edge might fuse to SCC's into one. If you add that edge in the component graph ABJK and PQO would not in fact be separate SCC's; they'd be merged into one, and would become one vertex in the component graph, which would of course eliminate the cycle. A cycle of reachability among several SCC's is an oxymoron; if there's a cycle between them, then all their vertices are mutually reachable, and they're really just one big SCC.
+
+	So we conclude that the component graph must be a DAG, and consquently that SCC's have a partial ordering relationship between one another. One SCC might be able to reach another but there will never be a cycle of reachability between two or more SCC's.
+
+
+
